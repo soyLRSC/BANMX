@@ -1,0 +1,101 @@
+<!-- Escáner QR -->
+<div class="mb-3">
+    <label for="qr">Escanear QR</label>
+    <div id="reader" style="width: 300px;"></div>
+</div>
+
+<!-- Mostrar el nombre del voluntario -->
+<div id="resultado_qr" class="alert alert-info" style="display: none;">
+    <strong>Voluntario detectado:</strong> <span id="nombre_qr"></span>
+</div>
+
+<!-- Campo oculto para usar en el formulario -->
+<input type="hidden" id="id_registro_qr" name="id_registro">
+
+
+
+
+<div class="form-floating mb-3">
+    <input type="time" class="form-control" id="hora" name="hora" placeholder="Hora"
+        value="<?php echo e(old('hora', $anticipada->hora ?? '')); ?>" 
+        style="background-color: #E6E6FA;" required>
+    <label for="hora">Hora</label>
+</div>
+
+
+<div class="form-floating mb-3">
+    <input type="date" class="form-control" id="fecha" name="fecha" placeholder="Fecha"
+        value="<?php echo e(old('fecha', $anticipada->fecha ?? '')); ?>" 
+        style="background-color: #E6E6FA;" required>
+    <label for="fecha">Fecha</label>
+</div>
+
+
+
+<div class="form-floating mb-3">
+    <select class="form-select" id="motivo" name="motivo" style="background-color: #E6E6FA;" required>
+        <option value="" disabled selected>Selecciona un motivo</option>
+
+        <option value="Se retira problema personal" <?php echo e(old('motivo', $anticipada->motivo ?? '') == 'Se retira problema personal' ? 'selected' : ''); ?>>Se retira problema personal</option>
+        <option value="Se retira problema de salud" <?php echo e(old('motivo', $anticipada->motivo ?? '') == 'Se retira problema de salud' ? 'selected' : ''); ?>>Se retira problema de salud</option>
+        </select>
+    <label for="motivo">Motivo</label>
+</div>
+
+
+
+<div class="form-floating mb-3">
+    <select class="form-select" id="encargado" name="encargado" style="background-color: #E6E6FA;" required>
+        <option value="" disabled selected>Selecciona un encargado</option>
+        <option value="Ana Soto (Traspaleo F&V)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Ana Soto (Traspaleo F&V)' ? 'selected' : ''); ?>>Ana Soto (Traspaleo F&V)</option>
+        <option value="Sebastian (Cámara refrigerados)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Sebastian (Cámara refrigerados)' ? 'selected' : ''); ?>>Sebastian (Cámara refrigerados)</option>
+        <option value="Carlos Pérez (Salidas)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Carlos Pérez (Salidas)' ? 'selected' : ''); ?>>Carlos Pérez (Salidas)</option>
+        <option value="Diana (Panadería)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Diana (Panadería)' ? 'selected' : ''); ?>>Diana (Panadería)</option>
+        <option value="Blanca (Recibo)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Blanca (Recibo)' ? 'selected' : ''); ?>>Blanca (Recibo)</option>
+        <option value="Guillermo (Mantenimiento)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Guillermo (Mantenimiento)' ? 'selected' : ''); ?>>Guillermo (Mantenimiento)</option>
+        <option value="Esmeralda (Gte Almacén)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Esmeralda (Gte Almacén)' ? 'selected' : ''); ?>>Esmeralda (Gte Almacén)</option>
+        <option value="Jessica (X)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Jessica (X)' ? 'selected' : ''); ?>>Jessica (X)</option>
+        <option value="Jhonny (Tráfico)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Jhonny (Tráfico)' ? 'selected' : ''); ?>>Jhonny (Tráfico)</option>
+        <option value="Brenda González (R.R.H.H)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Brenda González (R.R.H.H)' ? 'selected' : ''); ?>>Brenda González (R.R.H.H)</option>
+        <option value="Claudia González (S.P)" <?php echo e(old('encargado', $anticipada->encargado ?? '') == 'Claudia González (S.P)' ? 'selected' : ''); ?>>Claudia González (S.P)</option>
+    </select>
+    <label for="encargado">Encargado</label>
+</div>
+
+
+
+
+<script>
+    // Asegúrate de que esta variable tiene los registros que vienen del backend
+    const registros = <?php echo json_encode($registros, 15, 512) ?>;
+
+    function onScanSuccess(decodedText, decodedResult) {
+        const id = parseInt(decodedText);
+        const registro = registros.find(r => r.id === id);
+
+        if (registro) {
+            document.getElementById('nombre_qr').innerText = registro.nombre + " (ID: " + registro.id + ")";
+            document.getElementById('resultado_qr').style.display = 'block';
+            document.getElementById('id_registro_qr').value = registro.id;
+        } else {
+            document.getElementById('nombre_qr').innerText = 'Voluntario no encontrado.';
+            document.getElementById('resultado_qr').style.display = 'block';
+            document.getElementById('id_registro_qr').value = '';
+        }
+    }
+
+    function onScanError(errorMessage) {
+        // Puedes mostrar errores en consola si lo deseas
+        console.warn(errorMessage);
+    }
+
+    // Iniciar el escáner QR
+    const html5QrCodeScanner = new Html5QrcodeScanner(
+        "reader", 
+        { fps: 10, qrbox: 250 }, 
+        false
+    );
+    html5QrCodeScanner.render(onScanSuccess, onScanError);
+</script>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script><?php /**PATH D:\larabel\laragon\www\BANMGDL\resources\views/anticipadas/form-fields.blade.php ENDPATH**/ ?>

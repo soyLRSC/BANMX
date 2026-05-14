@@ -1,0 +1,2 @@
+<img src="<?php echo e(asset('img/logo.png')); ?>" alt="Logo" style="height: 350px; aling-item: center;">
+<?php /**PATH D:\larabel\laragon\www\BANMGDL\resources\views/components/application-logo.blade.php ENDPATH**/ ?>
